@@ -24,7 +24,7 @@ def predict_forest(forest, X):
         all_preds.append(majority_vote)
     return np.array(all_preds)
 
-def plot_bagging_result(forest, X, y, title="Bagging"):
+def plot_bagging_result(forest, X, y, title):
     h = 0.02
     x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5

@@ -70,7 +70,7 @@ def predict_tree(tree, X):
     else:
         return predict_tree(tree.right, X)
       
-def plot_decision_tree_result(tree, X, y, title="Decision Tree"):
+def plot_decision_tree_result(tree, X, y, title):
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
     xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100),
