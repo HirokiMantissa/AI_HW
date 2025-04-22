@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 
-train_df = pd.read_csv('HW3/第二大題/kmeans_train.csv')
+train_df = pd.read_csv('HW3/第二大題/kmeans_test.csv')
 X = train_df[['x1', 'x2']].values
 
 # Standard
@@ -63,8 +63,7 @@ while not mutux and iteration < 10:
     mutux = has_converged(centrol, new_centrol)
     centrol = new_centrol
     iteration += 1
-
-
+    
 # Decision Boundary
 h = 0.01 
 x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
@@ -87,7 +86,6 @@ plt.legend()
 plt.grid(True)
 plt.axis('equal')
 plt.show()
-
 
 labels = assign_clusters(X, centrol)
 plt.figure(figsize=(8, 6))
