@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 
 class Game:
     def __init__(self):
@@ -64,4 +66,51 @@ class Agent:
         done = self.env.is_terminal(next_state)
         self.state = next_state
         return next_state, reward, done
-        
+
+
+def plot_map(game: Game, agent_pos=None):
+    grid = game.map
+    value_map = np.zeros(grid.shape)
+    text_map = np.full(grid.shape, "", dtype=object)
+
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            cell = grid[i, j]
+            if cell == game.final:
+                value_map[i, j] = 3
+                text_map[i, j] = "G"
+            elif cell == game.wall:
+                value_map[i, j] = 1
+                text_map[i, j] = "W"
+            elif cell == game.bomb:
+                value_map[i, j] = 2
+                text_map[i, j] = "B"
+            else:
+                value_map[i, j] = 0
+                text_map[i, j] = "0"
+
+    cmap = ListedColormap(["white", "gray", "red", "green"])
+
+    plt.figure(figsize=(6, 4))
+    plt.imshow(value_map, cmap=cmap, extent=(0, grid.shape[1], grid.shape[0], 0))
+
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            plt.text(j + 0.5, i + 0.5, text_map[i, j], ha='center', va='center', fontsize=12, weight='bold')
+
+    if agent_pos is not None:
+        ai, aj = agent_pos
+        plt.text(aj + 0.5, ai + 0.5, "A", ha='center', va='center', fontsize=14, color='blue', weight='bold')
+
+    plt.grid(color='black')
+    plt.xticks(np.arange(0, grid.shape[1]+1, 1))
+    plt.yticks(np.arange(0, grid.shape[0]+1, 1))
+    plt.gca().set_xticks(np.arange(0.5, grid.shape[1], 1), minor=True)
+    plt.gca().set_yticks(np.arange(0.5, grid.shape[0], 1), minor=True)
+    plt.gca().grid(which='minor', color='black', linewidth=1)
+    plt.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    plt.title("GridWorld Map", fontsize=14)
+    plt.show()
+    
+game = Game()
+plot_map(game, agent_pos=game.current_state)
