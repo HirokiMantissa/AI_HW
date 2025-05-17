@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
-from V import value_iteration, plot_policy_map, plot_value_map
+from V import v_value
 
 class Game:
     def __init__(self):
@@ -11,9 +11,9 @@ class Game:
         self.final = "final"
 
         self.map = np.array([
-            [0, 0, 0, self.final],
+            [0, 0, 0, 0],
             [0, self.wall, 0, self.bomb],
-            [0, 0, 0, 0]
+            [0, 0, 0, self.final]
         ])
 
 class Agent:
@@ -22,39 +22,40 @@ class Agent:
         self.actions = ["up", "down", "left", "right"]
         
         self.gamma = 0.9
-        self.start = (2, 0)
-        self.end = (0, 3)
+        self.start = (0, 0)
+        self.end = (2, 3)
+        self.bomb = (1, 3)
         self.current_state = self.start
         
     def get_next_state(self, state, action):
         i, j = state
         if action == "up":
-            i = max(i - 1, 0)
+            next_state = [(i+1, j), (i, j+1), (i, j-1)]
         elif action == "down":
-            i = min(i + 1, self.env.map.shape[0] - 1)
+            next_state = [(i-1, j), (i, j+1), (i, j-1)]
         elif action == "left":
-            j = max(j - 1, 0)
+            next_state = [(i, j-1), (i+1, j), (i-1, j)]
         elif action == "right":
-            j = min(j + 1, self.env.map.shape[1] - 1)
+            next_state = [(i, j+1), (i+1, j), (i-1, j)]
+        return next_state
 
-        if self.env.map[i, j] == self.env.wall:
-            return state
-        return (i, j)
-
-    def get_reward(self, state):
-        cell = self.env.map[state]
-        if cell == self.env.final:
-            return 10
-        elif cell == self.env.bomb:
-            return -10
-        elif cell == self.env.wall:
-            return 0
-        else:
-            return -1 
-
+    def get_reward(self, state, next_state, V):
+        reward = []
+        nrows, ncols = self.env.map.shape
+        
+        for pos in next_state:
+            i, j = pos
+            if not (0 <= i < nrows and 0 <= j < ncols):
+                reward.append(round(float(V[state]), 2))
+                continue
+            if self.env.map[i, j] == self.env.wall:
+                reward.append(round(float(V[state]), 2))
+            else:
+                reward.append(round(float(V[pos]), 2))
+        return reward
+        
     def is_terminal(self, state):
         return self.env.map[state] in [self.env.final, self.env.bomb]
-
 
 
 def plot_map(game: Game, agent_pos=None):
@@ -103,14 +104,4 @@ def plot_map(game: Game, agent_pos=None):
     
 game = Game()
 agent = Agent(game)
-V, policy = value_iteration(agent, max_iter=10)
-plot_value_map(game, V, agent_pos=agent.current_state)
-plot_policy_map(game, policy, agent_pos=agent.current_state)
-
-
-
-print("State Value V*(s):")
-print(np.round(V, 2))
-
-print("\nOptimal Policy π*(s):")
-print(policy)
+V, policy = v_value(agent, 1000)
