@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
+import matplotlib.patches as patches
 
 from V import v_value
 from Q import q_value
+from policy import policy_iteration
 
 class Game:
     def __init__(self):
@@ -76,9 +77,9 @@ class Agent:
         
     def is_terminal(self, state):
         return self.env.map[state] in [self.env.final, self.env.bomb]
-
     
 game = Game()
 agent = Agent(game)
-V, policy = v_value(agent, 100)
-Q, policy = q_value(agent, 100)
+# V, policy = v_value(agent, 1000)
+# Q, policy = q_value(agent, 1000)
+V, policy = policy_iteration(agent, 2)
