@@ -81,7 +81,7 @@ def q_value(agent, max_iter):
     plot_map(q_table)
     return q_table, policy
 
-def plot_map(q_table, title="Q-values and Policy"):
+def plot_map(q_table, title="Q-values and Policy Result"):
     
     arrow_map = {'up': '↑', 'down': '↓', 'left': '←', 'right': '→'}
 

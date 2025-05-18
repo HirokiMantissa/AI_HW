@@ -20,7 +20,6 @@ def policy_iteration(agent):
         
         delta = 0
         new_V = np.copy(V)
-        print(V)
         for i in range(shape[0]):
             for j in range(shape[1]):
                 state = (i, j)

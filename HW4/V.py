@@ -10,11 +10,13 @@ def v_value(agent, max_iter):
     policy = np.full(shape, "", dtype=object)
 
     for iteration in range(max_iter):
+        print("========={}===========".format(iteration))
         new_V = np.copy(V)
 
         for i in range(shape[0]):
             for j in range(shape[1]):
                 state = (i, j)
+                print(state)
                 max_value = -np.inf
                 best_action = None
 
@@ -35,10 +37,12 @@ def v_value(agent, max_iter):
                 for action in agent.actions:
                     value = 0
                     next_state = agent.get_next_state(state, action)
+                    print(next_state)
                     reward = agent.get_reward(state, next_state, V)
                     
-                    value = 0 + agent.gamma * (reward[0]*0.8 + reward[1]*0.1 + reward[2]*0.1) 
+                    value = 0 + agent.gamma * (reward[0]*0.8 + reward[1]*0.1 + reward[2]*0.1)
                     value = round(float(value), 2)
+                    print("{} = 0 + {} * ({}*0.8 + {}*0.1) + {}*0.1".format(value, agent.gamma, reward[0], reward[1], reward[2]))
                     
                     if value > max_value:
                         max_value = value
@@ -46,7 +50,7 @@ def v_value(agent, max_iter):
 
                 new_V[state] = max_value
                 policy[state] = best_action
-                
+                print("\n")
         if np.array_equal(V, new_V):
             break
         V = new_V
@@ -92,6 +96,6 @@ def plot_map(V, policy):
             if action in arrow_map:
                 ax.text(x + 0.5, y + 0.3, arrow_map[action], ha='center', va='center', color='white', fontsize=16)
 
-    plt.title("V-Value and Policy", fontsize=14, weight='bold')
+    plt.title("V-Value and Policy Result", fontsize=14, weight='bold')
     plt.tight_layout()
     plt.show()

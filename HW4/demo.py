@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 
 from V import v_value
 from Q import q_value
@@ -77,9 +75,10 @@ class Agent:
         
     def is_terminal(self, state):
         return self.env.map[state] in [self.env.final, self.env.bomb]
-    
+
+
 game = Game()
 agent = Agent(game)
-# V, policy = v_value(agent, 1000)
-# Q, policy = q_value(agent, 1000)
-V, policy = policy_iteration(agent, 2)
+V, policy = v_value(agent, 1000)
+Q, policy = q_value(agent, 1000)
+policy_iteration(agent)
